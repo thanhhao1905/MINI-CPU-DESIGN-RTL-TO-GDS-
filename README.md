@@ -1,6 +1,6 @@
 
 
-# MINI CPU DESIGN – ARCHITECTURE AND OPERATIONAL FLOW #
+# Mini CPU: Comprehensive Design Flow – RTL Design, Functional Verification, and Physical Implementation #
 
 ## 1. System Overview
 
@@ -170,6 +170,9 @@ The simulation results perfectly match the example program described earlier, co
 
 After completing the functional verification of the Mini CPU through simulation, the next step is to take the design through the **synthesis and physical layout generation flow** – a critical phase in preparing for actual integrated circuit fabrication. This flow consists of several key stages: logic synthesis, placement and routing, GDS file export, and layout verification.
 
+<img width="685" height="271" alt="image" src="https://github.com/user-attachments/assets/c92c9aff-233b-49b8-b28d-8852b56e629c" />
+
+
 ### 7.1. Logic Synthesis with Yosys
 
 The goal of this step is to convert the Verilog code at the Register Transfer Level (RTL) into a **gate-level netlist** based on a specific **standard cell library**.
@@ -183,13 +186,19 @@ The goal of this step is to convert the Verilog code at the Register Transfer Le
 With the netlist ready, the next step is to determine the physical locations of each cell on the chip surface and create the metal interconnections between them.
 
 - **Tool used:** OpenROAD
-- **Implementation process via the `run_openroad.tcl` script:**
+- **Implementation process via the `openroad_mini_cpu.tcl` script:**
   - **Input data handling:** Accepts the netlist from Yosys, timing constraint file (`.sdc`), and technology library.
   - **Floorplanning:** Determines chip dimensions, I/O pin locations, and allocates areas for major functional blocks.
   - **Placement:** Arranges logic cells into predefined rows and columns, optimizing for area and performance.
+
+   <img width="1843" height="895" alt="image" src="https://github.com/user-attachments/assets/7f73f6cd-2804-414a-88d8-e6f61d528330" />
+
   - **Clock Tree Synthesis (CTS):** With support from the `constraints.sdc` file, OpenROAD builds a clock distribution tree, ensuring the `clk` signal reaches all flip-flops with minimal skew and meets timing requirements.
   - **Routing:** Creates metal interconnection paths between cells according to the netlist schematic.
 - **Output:** A **DEF (Design Exchange Format)** file containing geometric information about cell positions and routing paths across various metal layers.
+
+  <img width="1851" height="894" alt="image" src="https://github.com/user-attachments/assets/7365d3a2-3034-4b1f-9949-19ca4cdc0545" />
+
 
 ### 7.3. Complete Layout Generation and GDS Export with Magic
 
@@ -200,6 +209,12 @@ To prepare for manufacturing, the design must be converted from a positional des
   - **Import DEF file:** Using Tcl commands within Magic, the DEF file from OpenROAD is read along with the corresponding technology library.
   - **Layout inspection and editing (if needed):** Magic allows viewing and manual editing of the layout to ensure no geometric violations exist.
   - **Export GDS file:** Using the command `gds write mini_cpu.gds` to generate a GDSII file – the industry-standard format containing all physical parameters (diffusion layers, polysilicon, metal layers) required by the foundry.
+ 
+  <img width="1838" height="825" alt="image" src="https://github.com/user-attachments/assets/963a111b-c157-4de8-9194-7b81958655ae" />
+
+  <img width="1920" height="984" alt="image" src="https://github.com/user-attachments/assets/d30723c2-95bd-46e1-a97c-cde8fdba00ce" />
+
+
 
 ### 7.4. Layout Verification and Visualization with KLayout
 
@@ -210,6 +225,9 @@ Before proceeding to "Tape-out" – sending the design for fabrication – a fin
   - **Detailed layout viewing:** KLayout provides the ability to display different color-coded layers, allowing zooming, panning, and precise measurements on the layout.
   - **Visual inspection:** Engineers can easily identify potential issues such as layer overlaps, insufficient spacing between paths, or connectivity problems.
 - **Final result:** A complete Mini CPU layout, verified and ready for the **Tape-out** stage – the final step before mass production.
+
+  <img width="1852" height="895" alt="image" src="https://github.com/user-attachments/assets/1b817070-9c2d-4817-9f2b-3c759e5a7cae" />
+  <img width="1851" height="918" alt="image" src="https://github.com/user-attachments/assets/240f3e8c-9289-4076-9f9f-3d9dfb716449" />
 
 This RTL-to-GDS flow not only closes the integrated circuit design cycle from concept to physical product but also provides valuable hands-on experience for any IC design engineer seeking to deeply understand the synthesis and physical layout creation process.
 
